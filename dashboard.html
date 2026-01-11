@@ -896,8 +896,6 @@ footer {
 
 <script>
 // ========== VALIDASI LOGIN ==========
-<script>
-// ========== VALIDASI LOGIN ==========
 document.addEventListener("DOMContentLoaded", function() {
   const isLoggedIn = localStorage.getItem('isLoggedIn');
   
@@ -906,50 +904,35 @@ document.addEventListener("DOMContentLoaded", function() {
     window.location.href = 'login.html';
     return;
   }
-  // ========== END VALIDASI ==========
+  
+  // DEBUG: Tampilkan semua data di console
+  console.log("=== DEBUG LOCALSTORAGE ===");
+  console.log("Semua keys di localStorage:", Object.keys(localStorage));
+  console.log("dataPemasukan:", JSON.parse(localStorage.getItem("dataPemasukan")));
+  console.log("dataPengeluaran:", JSON.parse(localStorage.getItem("dataPengeluaran")));
+  console.log("saldoAwal:", JSON.parse(localStorage.getItem("saldoAwal")));
+  console.log("pemasukan (old key):", JSON.parse(localStorage.getItem("pemasukan")));
+  console.log("pengeluaran (old key):", JSON.parse(localStorage.getItem("pengeluaran")));
+  console.log("==========================");
 
-  // Deklarasi variabel
+  // ========== DEKLARASI VARIABEL ==========
   let saldoAwal, pemasukan, pengeluaran;
   
-  // Mobile menu toggle
-  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  
-  mobileMenuBtn.addEventListener('click', function() {
-    mobileMenu.classList.toggle('show');
-  });
-
-  // Close mobile menu when clicking outside
-  document.addEventListener('click', function(event) {
-    if (!mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
-      mobileMenu.classList.remove('show');
-    }
-  });
-
-  // Tab switching
-  window.showTab = function(tabName) {
-    // Remove active class from all tabs
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.classList.remove('active');
-    });
-    document.querySelectorAll('.tab-content').forEach(content => {
-      content.classList.remove('active');
-    });
-    
-    // Add active class to selected tab
-    document.querySelector(`.tab-btn[onclick="showTab('${tabName}')"]`).classList.add('active');
-    document.getElementById(`tab-${tabName}`).classList.add('active');
-  };
-
-  // ========== FUNGSI DATA ==========
+  // ========== FUNGSI UTAMA ==========
   // Load data from localStorage
   function loadData() {
     saldoAwal = JSON.parse(localStorage.getItem("saldoAwal")) || { jumlah: 0 };
-    pemasukan = JSON.parse(localStorage.getItem("dataPemasukan")) || [];
-    pengeluaran = JSON.parse(localStorage.getItem("dataPengeluaran")) || [];
     
-    // Debug log
-    console.log("Data dimuat:", {
+    // COBA SEMUA KEY YANG MUNGKIN
+    pemasukan = JSON.parse(localStorage.getItem("dataPemasukan")) || 
+                JSON.parse(localStorage.getItem("pemasukan")) || 
+                [];
+                
+    pengeluaran = JSON.parse(localStorage.getItem("dataPengeluaran")) || 
+                  JSON.parse(localStorage.getItem("pengeluaran")) || 
+                  [];
+    
+    console.log("Data yang dimuat:", {
       saldoAwal: saldoAwal.jumlah,
       pemasukan: pemasukan.length + " items",
       pengeluaran: pengeluaran.length + " items"
@@ -965,7 +948,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }).format(angka);
   }
 
-  // Calculate total functions
+  // Calculate totals
   function calculateTotals() {
     const totalMasuk = pemasukan.reduce((sum, d) => sum + Number(d.jumlah || 0), 0);
     const totalKeluar = pengeluaran.reduce((sum, d) => sum + Number(d.jumlah || 0), 0);
@@ -974,229 +957,172 @@ document.addEventListener("DOMContentLoaded", function() {
     return { totalMasuk, totalKeluar, saldoAkhir };
   }
 
-  // Render dashboard
-  function render() {
-    // Selalu load data terbaru
-    loadData();
+  // ========== MOBILE MENU ==========
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', function() {
+      mobileMenu.classList.toggle('show');
+    });
+  }
+
+  // Tab switching
+  window.showTab = function(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.remove('active');
+    });
     
+    const tabBtn = document.querySelector(`.tab-btn[onclick="showTab('${tabName}')"]`);
+    const tabContent = document.getElementById(`tab-${tabName}`);
+    
+    if (tabBtn) tabBtn.classList.add('active');
+    if (tabContent) tabContent.classList.add('active');
+  };
+
+  // ========== RENDER DASHBOARD ==========
+  function renderDashboard() {
+    loadData();
     const { totalMasuk, totalKeluar, saldoAkhir } = calculateTotals();
     
-    // Update card values
-    document.getElementById("saldoAwal").innerText = formatRupiah(saldoAwal.jumlah);
-    document.getElementById("masuk").innerText = formatRupiah(totalMasuk);
-    document.getElementById("keluar").innerText = formatRupiah(totalKeluar);
-    document.getElementById("saldo").innerText = formatRupiah(saldoAkhir);
-
-    // Combine and sort transactions
-    let semua = [];
+    // Update cards
+    const saldoAwalEl = document.getElementById("saldoAwal");
+    const masukEl = document.getElementById("masuk");
+    const keluarEl = document.getElementById("keluar");
+    const saldoEl = document.getElementById("saldo");
     
-    pemasukan.forEach((d, i) => {
-      semua.push({
-        tanggal: d.tanggal,
-        keterangan: d.keterangan,
+    if (saldoAwalEl) saldoAwalEl.innerText = formatRupiah(saldoAwal.jumlah);
+    if (masukEl) masukEl.innerText = formatRupiah(totalMasuk);
+    if (keluarEl) keluarEl.innerText = formatRupiah(totalKeluar);
+    if (saldoEl) saldoEl.innerText = formatRupiah(saldoAkhir);
+    
+    renderTransactionTables();
+  }
+
+  // Render transaction tables
+  function renderTransactionTables() {
+    // Combine transactions
+    let semuaTransaksi = [];
+    
+    // Add pemasukan
+    pemasukan.forEach((item, index) => {
+      semuaTransaksi.push({
+        ...item,
         jenis: "Pemasukan",
-        jumlah: d.jumlah,
-        hargaSatuan: d.hargaSatuan || 0,
-        jumlahBarang: d.jumlahBarang || 1,
-        catatan: d.catatan || '',
         tipe: "in",
-        index: i
+        index: index
       });
     });
-
-    pengeluaran.forEach((d, i) => {
-      semua.push({
-        tanggal: d.tanggal,
-        keterangan: d.keterangan,
+    
+    // Add pengeluaran
+    pengeluaran.forEach((item, index) => {
+      semuaTransaksi.push({
+        ...item,
         jenis: "Pengeluaran",
-        jumlah: d.jumlah,
-        hargaSatuan: d.hargaSatuan || 0,
-        jumlahBarang: d.jumlahBarang || 1,
-        catatan: d.catatan || '',
         tipe: "out",
-        index: i
+        index: index
       });
     });
-
+    
     // Sort by date (newest first)
-    semua.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+    semuaTransaksi.sort((a, b) => new Date(b.tanggal || 0) - new Date(a.tanggal || 0));
+    
+    // Render All Transactions
+    renderTable('All', semuaTransaksi);
+    
+    // Render Pemasukan Only
+    const pemasukanOnly = semuaTransaksi.filter(t => t.tipe === 'in');
+    renderTable('Pemasukan', pemasukanOnly);
+    
+    // Render Pengeluaran Only
+    const pengeluaranOnly = semuaTransaksi.filter(t => t.tipe === 'out');
+    renderTable('Pengeluaran', pengeluaranOnly);
+  }
 
-    // === RENDER TAB SEMUA TRANSAKSI ===
-    let tbodyAll = document.getElementById("dataRiwayatAll");
-    let noDataAll = document.getElementById("noDataMessageAll");
+  // Helper to render table
+  function renderTable(type, data) {
+    const tbodyId = `dataRiwayat${type === 'All' ? 'All' : type}`;
+    const noDataId = `noDataMessage${type === 'All' ? 'All' : type}`;
+    const tbody = document.getElementById(tbodyId);
+    const noData = document.getElementById(noDataId);
     
-    tbodyAll.innerHTML = "";
+    if (!tbody) return;
     
-    if (semua.length === 0) {
-      noDataAll.style.display = 'block';
-      tbodyAll.innerHTML = `
+    tbody.innerHTML = '';
+    
+    if (data.length === 0) {
+      if (noData) noData.style.display = 'block';
+      tbody.innerHTML = `
         <tr>
           <td colspan="5" style="text-align: center; padding: 2rem; color: var(--gray);">
             <i class="fas fa-receipt" style="font-size: 2rem; margin-bottom: 1rem; display: block; color: var(--gray-light);"></i>
-            Belum ada transaksi. Tambahkan pemasukan atau pengeluaran pertama Anda.
+            Belum ada transaksi ${type.toLowerCase()}.
           </td>
         </tr>
       `;
     } else {
-      noDataAll.style.display = 'none';
+      if (noData) noData.style.display = 'none';
       
-      let limitedTransactions = semua.slice(0, 10);
-      
-      limitedTransactions.forEach(t => {
-        let row = document.createElement("tr");
+      data.forEach((item, idx) => {
+        const row = document.createElement('tr');
+        const date = item.tanggal ? new Date(item.tanggal).toLocaleDateString('id-ID') : '-';
         
-        // Format date
-        let dateObj = new Date(t.tanggal);
-        let formattedDate = dateObj.toLocaleDateString('id-ID', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric'
-        });
-        
-        row.innerHTML = `
-          <td>${formattedDate}</td>
-          <td>${t.keterangan}</td>
-          <td><span class="badge ${t.jenis === 'Pemasukan' ? 'income-badge' : 'expense-badge'}">${t.jenis}</span></td>
-          <td class="amount ${t.jenis === 'Pemasukan' ? 'income-amount' : 'expense-amount'}">${formatRupiah(t.jumlah)}</td>
-          <td>
-            <button class="action-btn delete-btn" onclick="hapusData('${t.tipe}', ${t.index})">
-              <i class="fas fa-trash"></i> Hapus
-            </button>
-          </td>
-        `;
-        tbodyAll.appendChild(row);
-      });
-    }
-
-    // === RENDER TAB PEMASUKAN ===
-    let tbodyPemasukan = document.getElementById("dataRiwayatPemasukan");
-    let noDataPemasukan = document.getElementById("noDataMessagePemasukan");
-    
-    tbodyPemasukan.innerHTML = "";
-    
-    let pemasukanFiltered = pemasukan.slice().sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
-    
-    if (pemasukanFiltered.length === 0) {
-      noDataPemasukan.style.display = 'block';
-    } else {
-      noDataPemasukan.style.display = 'none';
-      
-      pemasukanFiltered.forEach((t, i) => {
-        let row = document.createElement("tr");
-        
-        // Format date
-        let dateObj = new Date(t.tanggal);
-        let formattedDate = dateObj.toLocaleDateString('id-ID', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric'
-        });
-        
-        // Detail barang
-        let detailBarang = '';
-        if (t.hargaSatuan && t.jumlahBarang) {
-          detailBarang = `
-            <div class="item-details">
-              <span>${t.jumlahBarang} unit</span>
-              <span>@ ${formatRupiah(t.hargaSatuan)}</span>
-            </div>
+        if (type === 'All') {
+          row.innerHTML = `
+            <td>${date}</td>
+            <td>${item.keterangan || '-'}</td>
+            <td><span class="badge ${item.jenis === 'Pemasukan' ? 'income-badge' : 'expense-badge'}">${item.jenis}</span></td>
+            <td class="amount ${item.jenis === 'Pemasukan' ? 'income-amount' : 'expense-amount'}">${formatRupiah(item.jumlah || 0)}</td>
+            <td>
+              <button class="action-btn delete-btn" onclick="hapusTransaksi('${item.tipe}', ${item.index})">
+                <i class="fas fa-trash"></i> Hapus
+              </button>
+            </td>
+          `;
+        } else {
+          row.innerHTML = `
+            <td>${date}</td>
+            <td><strong>${item.keterangan || '-'}</strong></td>
+            <td>${item.catatan ? `<div style="font-size: 0.85rem; color: var(--gray); margin-top: 4px;">${item.catatan}</div>` : ''}</td>
+            <td class="amount ${type === 'Pemasukan' ? 'income-amount' : 'expense-amount'}">
+              <strong>${formatRupiah(item.jumlah || 0)}</strong>
+            </td>
+            <td>
+              <button class="action-btn delete-btn" onclick="hapusTransaksi('${item.tipe}', ${item.index})">
+                <i class="fas fa-trash"></i> Hapus
+              </button>
+            </td>
           `;
         }
         
-        row.innerHTML = `
-          <td>${formattedDate}</td>
-          <td>
-            <strong>${t.keterangan}</strong>
-            ${t.catatan ? `<div style="font-size: 0.85rem; color: var(--gray); margin-top: 4px;">${t.catatan}</div>` : ''}
-          </td>
-          <td>${detailBarang}</td>
-          <td class="amount income-amount">
-            <strong>${formatRupiah(t.jumlah)}</strong>
-          </td>
-          <td>
-            <button class="action-btn delete-btn" onclick="hapusData('in', ${i})">
-              <i class="fas fa-trash"></i> Hapus
-            </button>
-          </td>
-        `;
-        tbodyPemasukan.appendChild(row);
-      });
-    }
-
-    // === RENDER TAB PENGELUARAN ===
-    let tbodyPengeluaran = document.getElementById("dataRiwayatPengeluaran");
-    let noDataPengeluaran = document.getElementById("noDataMessagePengeluaran");
-    
-    tbodyPengeluaran.innerHTML = "";
-    
-    let pengeluaranFiltered = pengeluaran.slice().sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
-    
-    if (pengeluaranFiltered.length === 0) {
-      noDataPengeluaran.style.display = 'block';
-    } else {
-      noDataPengeluaran.style.display = 'none';
-      
-      pengeluaranFiltered.forEach((t, i) => {
-        let row = document.createElement("tr");
-        
-        // Format date
-        let dateObj = new Date(t.tanggal);
-        let formattedDate = dateObj.toLocaleDateString('id-ID', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric'
-        });
-        
-        // Detail barang
-        let detailBarang = '';
-        if (t.hargaSatuan && t.jumlahBarang) {
-          detailBarang = `
-            <div class="item-details">
-              <span>${t.jumlahBarang} unit</span>
-              <span>@ ${formatRupiah(t.hargaSatuan)}</span>
-            </div>
-          `;
-        }
-        
-        row.innerHTML = `
-          <td>${formattedDate}</td>
-          <td>
-            <strong>${t.keterangan}</strong>
-            ${t.catatan ? `<div style="font-size: 0.85rem; color: var(--gray); margin-top: 4px;">${t.catatan}</div>` : ''}
-          </td>
-          <td>${detailBarang}</td>
-          <td class="amount expense-amount">
-            <strong>${formatRupiah(t.jumlah)}</strong>
-          </td>
-          <td>
-            <button class="action-btn delete-btn" onclick="hapusData('out', ${i})">
-              <i class="fas fa-trash"></i> Hapus
-            </button>
-          </td>
-        `;
-        tbodyPengeluaran.appendChild(row);
+        tbody.appendChild(row);
       });
     }
   }
 
-  // Delete transaction function
-  window.hapusData = function(tipe, index) {
+  // Delete function
+  window.hapusTransaksi = function(tipe, index) {
     if (confirm("Apakah Anda yakin ingin menghapus transaksi ini?")) {
-      loadData(); // Pastikan data terbaru
+      loadData();
       
       if (tipe === "in") {
         pemasukan.splice(index, 1);
+        // Coba semua key yang mungkin
         localStorage.setItem("dataPemasukan", JSON.stringify(pemasukan));
+        localStorage.setItem("pemasukan", JSON.stringify(pemasukan));
       } else {
         pengeluaran.splice(index, 1);
         localStorage.setItem("dataPengeluaran", JSON.stringify(pengeluaran));
+        localStorage.setItem("pengeluaran", JSON.stringify(pengeluaran));
       }
-      render();
       
-      // Show success notification
       alert("Transaksi berhasil dihapus!");
+      renderDashboard();
     }
-  }
+  };
 
   // ========== MODAL SALDO AWAL ==========
   const saldoModal = document.getElementById('saldoModal');
@@ -1206,54 +1132,52 @@ document.addEventListener("DOMContentLoaded", function() {
   const saldoAwalInput = document.getElementById('saldoAwalInput');
   const saldoForm = document.getElementById('saldoForm');
 
-  // Open modal
-  editSaldoBtn.addEventListener('click', function() {
-    loadData(); // Ambil data terbaru
-    saldoAwalInput.value = saldoAwal.jumlah;
-    saldoModal.style.display = 'flex';
-    saldoAwalInput.focus();
-  });
+  if (editSaldoBtn) {
+    editSaldoBtn.addEventListener('click', function() {
+      loadData();
+      saldoAwalInput.value = saldoAwal.jumlah;
+      saldoModal.style.display = 'flex';
+      saldoAwalInput.focus();
+    });
+  }
 
-  // Close modal
   function closeModal() {
     saldoModal.style.display = 'none';
   }
 
-  // Cancel button
-  cancelSaldoBtn.addEventListener('click', closeModal);
+  if (cancelSaldoBtn) {
+    cancelSaldoBtn.addEventListener('click', closeModal);
+  }
 
-  // Close modal when clicking outside
-  saldoModal.addEventListener('click', function(e) {
-    if (e.target === saldoModal) {
+  if (saldoModal) {
+    saldoModal.addEventListener('click', function(e) {
+      if (e.target === saldoModal) closeModal();
+    });
+  }
+
+  if (saldoForm) {
+    saldoForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const newSaldo = Number(saldoAwalInput.value);
+      
+      if (isNaN(newSaldo) || newSaldo < 0) {
+        alert('Masukkan jumlah saldo awal yang valid!');
+        return;
+      }
+      
+      saldoAwal = { jumlah: newSaldo };
+      localStorage.setItem("saldoAwal", JSON.stringify(saldoAwal));
+      
+      alert(`Saldo awal berhasil diubah menjadi ${formatRupiah(newSaldo)}`);
       closeModal();
-    }
-  });
+      renderDashboard();
+    });
+  }
 
-  // Save saldo awal
-  saldoForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const newSaldo = Number(saldoAwalInput.value);
-    
-    if (isNaN(newSaldo) || newSaldo < 0) {
-      alert('Masukkan jumlah saldo awal yang valid!');
-      return;
-    }
-    
-    saldoAwal = { jumlah: newSaldo };
-    localStorage.setItem("saldoAwal", JSON.stringify(saldoAwal));
-    
-    // Show success message
-    alert(`Saldo awal berhasil diubah menjadi ${formatRupiah(newSaldo)}`);
-    
-    closeModal();
-    render();
-  });
-
-  // Initial render
-  render();
+  // ========== INITIALIZE ==========
+  renderDashboard();
   
-  // Auto refresh setiap 2 detik (untuk testing)
-  setInterval(render, 2000);
+  // Auto refresh setiap 3 detik
+  setInterval(renderDashboard, 3000);
 });
 </script>
