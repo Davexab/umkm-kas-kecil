@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Tambah Pengeluaran - UMKM Kas Kecil</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --light: #f8fafc;
+  --dark: #1e293b;
+  --gray: #64748b;
+  --gray-light: #e2e8f0;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+body {
+  background: linear-gradient(135deg, #fff5f5 0%, #fff0f0 100%);
+  color: var(--dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background: linear-gradient(to right, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 1.2rem 2rem;
+  box-shadow: var(--shadow);
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo i {
+  font-size: 1.8rem;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+nav a:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+nav a.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.mobile-menu {
+  display: none;
+  background: var(--primary-dark);
+  flex-direction: column;
+  padding: 1rem;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.mobile-menu a {
+  color: white;
+  text-decoration: none;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile-menu a:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.mobile-menu a.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  flex: 1;
+}
+
+.form-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 2.5rem;
+  box-shadow: var(--shadow);
+  border-top: 5px solid var(--danger);
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.form-header i {
+  font-size: 2.5rem;
+  color: var(--danger);
+}
+
+.form-header h2 {
+  color: var(--dark);
+  font-size: 1.8rem;
+}
+
+.form-header p {
+  color: var(--gray);
+  margin-top: 5px;
+  font-size: 0.95rem;
+}
+
+.form-group {
+  margin-bottom: 1.8rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  border: 2px solid var(--gray-light);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-group input[type="number"] {
+  font-weight: 600;
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon i {
+  position: absolute;
+  left: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray);
+}
+
+.input-with-icon input {
+  padding-left: 3rem;
+}
+
+.category-select {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.category-btn {
+  padding: 10px;
+  background: var(--light);
+  border: 2px solid var(--gray-light);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-weight: 500;
+}
+
+.category-btn:hover {
+  background: #e5e7eb;
+  border-color: var(--gray);
+}
+
+.category-btn.active {
+  background: var(--danger);
+  color: white;
+  border-color: var(--danger);
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.9rem 1.8rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 150px;
+}
+
+.btn-primary {
+  background: linear-gradient(to right, var(--danger), #dc2626);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to right, #dc2626, #b91c1c);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+}
+
+.btn-secondary {
+  background: var(--gray-light);
+  color: var(--dark);
+}
+
+.btn-secondary:hover {
+  background: #d1d5db;
+  transform: translateY(-2px);
+}
+
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--gray);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--gray-light);
+  margin-top: 2rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .mobile-menu-btn {
+    display: block;
+  }
+  
+  nav {
+    display: none;
+  }
+  
+  .mobile-menu.show {
+    display: flex;
+  }
+  
+  .form-card {
+    padding: 1.5rem;
+  }
+  
+  .form-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .form-header i {
+    font-size: 2rem;
+  }
+  
+  .form-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .category-select {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .buttons {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .form-card {
+    padding: 1.2rem;
+  }
+  
+  header {
+    padding: 1rem;
+  }
+  
+  .category-select {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="logo">
+      <i class="fas fa-chart-line"></i>
+      <h1>UMKM Kas Kecil</h1>
+    </div>
+    
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+      <i class="fas fa-bars"></i>
+    </button>
+    
+    <nav>
+      <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="pemasukan.html"><i class="fas fa-plus-circle"></i> Pemasukan</a>
+      <a href="pengeluaran.html" class="active"><i class="fas fa-minus-circle"></i> Pengeluaran</a>
+      <a href="#" id="logoutLink" style="background: rgba(255, 255, 255, 0.15);">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </nav>
+    
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="pemasukan.html"><i class="fas fa-plus-circle"></i> Pemasukan</a>
+      <a href="pengeluaran.html" class="active"><i class="fas fa-minus-circle"></i> Pengeluaran</a>
+      <a href="#" id="logoutLinkMobile"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="form-card">
+    <div class="form-header">
+      <i class="fas fa-shopping-cart"></i>
+      <div>
+        <h2>Tambah Pengeluaran</h2>
+        <p>Catat semua pengeluaran operasional usaha Anda</p>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="tgl"><i class="fas fa-calendar-alt"></i> Tanggal</label>
+      <div class="input-with-icon">
+        <i class="fas fa-calendar"></i>
+        <input type="date" id="tgl">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="ket"><i class="fas fa-file-alt"></i> Keterangan</label>
+      <div class="input-with-icon">
+        <i class="fas fa-pen"></i>
+        <input type="text" id="ket" placeholder="Contoh: Beli bahan baku, Bayar listrik, Gaji karyawan">
+      </div>
+      
+    
+    </div>
+    
+    <div class="form-group">
+      <label for="jml"><i class="fas fa-coins"></i> Jumlah (Rp)</label>
+      <div class="input-with-icon">
+        <i class="fas fa-money-bill"></i>
+        <input type="number" id="jml" placeholder="0" min="0">
+      </div>
+    </div>
+    
+    <div class="buttons">
+      <button class="btn btn-primary" onclick="simpan()">
+        <i class="fas fa-save"></i> Simpan Pengeluaran
+      </button>
+      <button class="btn btn-secondary" onclick="location.href='dashboard.html'">
+        <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+      </button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2023 UMKM Kas Kecil - Sistem Manajemen Keuangan Sederhana</p>
+</footer>
+
+<script>
+// ========== VALIDASI LOGIN ==========
+window.addEventListener('DOMContentLoaded', function() {
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  
+  if (isLoggedIn !== 'true') {
+    alert('Anda harus login terlebih dahulu!');
+    window.location.href = 'login.html';
+    return;
+  }
+  // ========== END VALIDASI ==========
+
+  // Mobile menu toggle
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  
+  mobileMenuBtn.addEventListener('click', function() {
+    mobileMenu.classList.toggle('show');
+  });
+
+  // Set today's date
+  document.getElementById('tgl').value = new Date().toISOString().split('T')[0];
+
+  // ========== FUNGSI LOGOUT ==========
+  function logout() {
+    if (confirm('Apakah Anda yakin ingin logout?')) {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('savedUsername');
+      window.location.href = 'logout.html';
+    }
+  }
+
+  document.getElementById('logoutLink').addEventListener('click', function(e) {
+    e.preventDefault();
+    logout();
+  });
+
+  document.getElementById('logoutLinkMobile').addEventListener('click', function(e) {
+    e.preventDefault();
+    logout();
+  });
+  // ========== END FUNGSI LOGOUT ==========
+});
+
+function formatRupiah(angka) {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0
+  }).format(angka);
+}
+
+function setCategory(category) {
+  document.getElementById('ket').value = category;
+  
+  // Remove active class from all buttons
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Add active class to clicked button
+  event.target.classList.add('active');
+}
+
+function simpan() {
+  // Cek login status lagi untuk keamanan
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  if (isLoggedIn !== 'true') {
+    alert('Sesi telah berakhir. Silakan login kembali.');
+    window.location.href = 'login.html';
+    return;
+  }
+  
+  const tgl = document.getElementById('tgl').value;
+  const ket = document.getElementById('ket').value;
+  const jml = document.getElementById('jml').value;
+  
+  // Validation
+  if (!tgl || !ket || !jml || Number(jml) <= 0) {
+    alert('Harap lengkapi semua field dengan data yang valid!');
+    return;
+  }
+  
+  let data = JSON.parse(localStorage.getItem("pengeluaran")) || [];
+  data.push({
+    tanggal: tgl,
+    keterangan: ket,
+    jumlah: Number(jml)
+  });
+  
+  localStorage.setItem("pengeluaran", JSON.stringify(data));
+  
+  // Show success message
+  alert(`Pengeluaran sebesar ${formatRupiah(jml)} berhasil dicatat!`);
+  
+  // Redirect to dashboard
+  location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>
