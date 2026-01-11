@@ -5,10 +5,898 @@
 <title>Dashboard - UMKM Kas Kecil</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- ... SEMUA CSS STYLE DASHBOARD ... -->
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  --light: #f8fafc;
+  --dark: #1e293b;
+  --gray: #64748b;
+  --gray-light: #e2e8f0;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+body {
+  background: linear-gradient(135deg, #f6f8ff 0%, #f0f4ff 100%);
+  color: var(--dark);
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(to right, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 1.2rem 2rem;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo i {
+  font-size: 1.8rem;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+nav a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+nav a.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.mobile-menu {
+  display: none;
+  background: var(--primary-dark);
+  flex-direction: column;
+  padding: 1rem;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 1rem;
+  border-radius: var(--radius-sm);
+}
+
+.mobile-menu a {
+  color: white;
+  text-decoration: none;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile-menu a:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.mobile-menu a.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.nav-text {
+  display: inline;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.welcome-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+  border-left: 5px solid var(--primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.welcome-content h2 {
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.5rem;
+}
+
+.welcome-content p {
+  color: var(--gray);
+  line-height: 1.6;
+}
+
+.edit-saldo-btn {
+  background: linear-gradient(to right, var(--warning), #f59e0b);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.edit-saldo-btn:hover {
+  background: linear-gradient(to right, #f59e0b, #d97706);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-top: 4px solid var(--primary);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card.initial {
+  border-top-color: var(--info);
+}
+
+.card.income {
+  border-top-color: var(--success);
+}
+
+.card.expense {
+  border-top-color: var(--danger);
+}
+
+.card.balance {
+  border-top-color: var(--warning);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.card-header i {
+  font-size: 1.8rem;
+  color: var(--primary);
+}
+
+.card.initial .card-header i { color: var(--info); }
+.card.income .card-header i { color: var(--success); }
+.card.expense .card-header i { color: var(--danger); }
+.card.balance .card-header i { color: var(--warning); }
+
+.card-title {
+  font-size: 0.95rem;
+  color: var(--gray);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.card-value {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin: 0.5rem 0;
+}
+
+.card-change {
+  font-size: 0.9rem;
+  color: var(--gray);
+}
+
+.transaction-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+  overflow-x: auto;
+}
+
+.transaction-card h3 {
+  color: var(--dark);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.3rem;
+}
+
+.tab-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--gray-light);
+  padding-bottom: 1rem;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-btn:hover {
+  background: var(--light);
+  color: var(--primary);
+}
+
+.tab-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+thead {
+  background: var(--light);
+}
+
+th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--dark);
+  border-bottom: 2px solid var(--gray-light);
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--gray-light);
+  color: var(--dark);
+}
+
+tbody tr {
+  transition: background 0.2s ease;
+}
+
+tbody tr:hover {
+  background: #f9fafb;
+}
+
+.amount {
+  font-weight: 600;
+}
+
+.amount.income-amount {
+  color: var(--success);
+}
+
+.amount.expense-amount {
+  color: var(--danger);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.badge.income-badge {
+  background: #d1fae5;
+  color: var(--success);
+}
+
+.badge.expense-badge {
+  background: #fee2e2;
+  color: var(--danger);
+}
+
+.item-details {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin-top: 4px;
+}
+
+.item-details span {
+  background: var(--light);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-right: 5px;
+  display: inline-block;
+}
+
+.action-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.delete-btn {
+  background: var(--danger);
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: var(--radius);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-lg);
+  max-width: 500px;
+  width: 100%;
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 2rem;
+}
+
+.modal-header i {
+  font-size: 2.5rem;
+  color: var(--info);
+}
+
+.modal-header h3 {
+  color: var(--dark);
+  font-size: 1.8rem;
+}
+
+.modal-form {
+  margin-bottom: 2rem;
+}
+
+.modal-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.modal-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-form input {
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  border: 2px solid var(--gray-light);
+  border-radius: var(--radius-sm);
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-align: right;
+}
+
+.modal-form input:focus {
+  outline: none;
+  border-color: var(--info);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.modal-btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-btn.save {
+  background: linear-gradient(to right, var(--info), #2563eb);
+  color: white;
+}
+
+.modal-btn.save:hover {
+  background: linear-gradient(to right, #2563eb, #1d4ed8);
+  transform: translateY(-2px);
+}
+
+.modal-btn.cancel {
+  background: var(--gray-light);
+  color: var(--dark);
+}
+
+.modal-btn.cancel:hover {
+  background: #d1d5db;
+}
+
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--gray);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--gray-light);
+  margin-top: 3rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .mobile-menu-btn {
+    display: block;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+  }
+  
+  .nav-text {
+    display: none;
+  }
+  
+  nav {
+    display: none;
+  }
+  
+  .mobile-menu.show {
+    display: flex;
+  }
+  
+  .logo h1 {
+    font-size: 1.3rem;
+  }
+  
+  .welcome-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .card-value {
+    font-size: 1.8rem;
+  }
+  
+  .transaction-card {
+    padding: 1.5rem;
+    margin: 1rem -1rem;
+    border-radius: 0;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .welcome-card {
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+  
+  .welcome-content h2 {
+    font-size: 1.3rem;
+  }
+  
+  .tab-buttons {
+    flex-wrap: wrap;
+  }
+  
+  .tab-btn {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+  }
+  
+  table {
+    min-width: 100%;
+    font-size: 0.9rem;
+  }
+  
+  th, td {
+    padding: 0.75rem;
+  }
+  
+  .action-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .item-details {
+    font-size: 0.75rem;
+  }
+  
+  .modal-content {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
+  .modal-header h3 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 1rem;
+  }
+  
+  .card {
+    padding: 1.2rem;
+  }
+  
+  .card-value {
+    font-size: 1.6rem;
+  }
+  
+  .transaction-card h3 {
+    font-size: 1.1rem;
+  }
+  
+  th, td {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+  
+  .badge {
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  
+  .modal-form input {
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .modal-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+</style>
 </head>
 <body>
-<!-- ... SEMUA HTML DASHBOARD ... -->
+
+<header>
+  <div class="header-container">
+    <div class="logo">
+      <i class="fas fa-chart-line"></i>
+      <h1>UMKM Kas Kecil</h1>
+    </div>
+    
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+      <i class="fas fa-bars"></i>
+    </button>
+    
+    <nav>
+      <a href="dashboard.html" class="active"><i class="fas fa-home"></i> <span class="nav-text">Dashboard</span></a>
+      <a href="pemasukan.html"><i class="fas fa-plus-circle"></i> <span class="nav-text">Pemasukan</span></a>
+      <a href="pengeluaran.html"><i class="fas fa-minus-circle"></i> <span class="nav-text">Pengeluaran</span></a>
+      <a href="#" id="logoutBtn" style="background: rgba(255, 255, 255, 0.15);">
+        <i class="fas fa-sign-out-alt"></i> <span class="nav-text">Logout</span>
+      </a>
+    </nav>
+    
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="pemasukan.html"><i class="fas fa-plus-circle"></i> Pemasukan</a>
+      <a href="pengeluaran.html"><i class="fas fa-minus-circle"></i> Pengeluaran</a>
+      <a href="#" id="logoutBtnMobile"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="welcome-card">
+    <div class="welcome-content">
+      <h2><i class="fas fa-chart-bar"></i> Dashboard Keuangan</h2>
+      <p>Pantau semua pemasukan dan pengeluaran UMKM Anda secara real-time. Dashboard ini menampilkan ringkasan keuangan dan riwayat transaksi terbaru.</p>
+    </div>
+    <button class="edit-saldo-btn" id="editSaldoBtn">
+      <i class="fas fa-edit"></i> Edit Saldo Awal
+    </button>
+  </div>
+
+  <div class="grid">
+    <div class="card initial">
+      <div class="card-header">
+        <span class="card-title">Saldo Awal</span>
+        <i class="fas fa-piggy-bank"></i>
+      </div>
+      <div class="card-value" id="saldoAwal">Rp 0</div>
+      <div class="card-change">Modal awal usaha</div>
+    </div>
+    
+    <div class="card income">
+      <div class="card-header">
+        <span class="card-title">Total Pemasukan</span>
+        <i class="fas fa-wallet"></i>
+      </div>
+      <div class="card-value" id="masuk">Rp 0</div>
+      <div class="card-change">Seluruh transaksi masuk</div>
+    </div>
+    
+    <div class="card expense">
+      <div class="card-header">
+        <span class="card-title">Total Pengeluaran</span>
+        <i class="fas fa-shopping-cart"></i>
+      </div>
+      <div class="card-value" id="keluar">Rp 0</div>
+      <div class="card-change">Seluruh transaksi keluar</div>
+    </div>
+    
+    <div class="card balance">
+      <div class="card-header">
+        <span class="card-title">Saldo Akhir</span>
+        <i class="fas fa-calculator"></i>
+      </div>
+      <div class="card-value" id="saldo">Rp 0</div>
+      <div class="card-change">Saldo saat ini</div>
+    </div>
+  </div>
+
+  <div class="transaction-card">
+    <h3><i class="fas fa-history"></i> Riwayat Transaksi Terbaru</h3>
+    
+    <div class="tab-buttons">
+      <button class="tab-btn active" onclick="showTab('all')">
+        <i class="fas fa-list"></i> Semua
+      </button>
+      <button class="tab-btn" onclick="showTab('pemasukan')">
+        <i class="fas fa-arrow-up"></i> Pemasukan
+      </button>
+      <button class="tab-btn" onclick="showTab('pengeluaran')">
+        <i class="fas fa-arrow-down"></i> Pengeluaran
+      </button>
+    </div>
+    
+    <!-- Tab Semua Transaksi -->
+    <div class="tab-content active" id="tab-all">
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Keterangan</th>
+            <th>Jenis</th>
+            <th>Jumlah</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="dataRiwayatAll">
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+      </table>
+      <div id="noDataMessageAll" class="no-data" style="display: none; padding: 3rem;">
+        <i class="fas fa-receipt"></i>
+        <p>Belum ada transaksi. Mulai dengan menambahkan pemasukan atau pengeluaran.</p>
+      </div>
+    </div>
+    
+    <!-- Tab Pemasukan -->
+    <div class="tab-content" id="tab-pemasukan">
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Barang</th>
+            <th>Detail</th>
+            <th>Total</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="dataRiwayatPemasukan">
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+      </table>
+      <div id="noDataMessagePemasukan" class="no-data" style="display: none; padding: 3rem;">
+        <i class="fas fa-money-bill-wave"></i>
+        <p>Belum ada data pemasukan.</p>
+      </div>
+    </div>
+    
+    <!-- Tab Pengeluaran -->
+    <div class="tab-content" id="tab-pengeluaran">
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Keterangan</th>
+            <th>Detail</th>
+            <th>Total</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="dataRiwayatPengeluaran">
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+      </table>
+      <div id="noDataMessagePengeluaran" class="no-data" style="display: none; padding: 3rem;">
+        <i class="fas fa-shopping-cart"></i>
+        <p>Belum ada data pengeluaran.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Edit Saldo Awal -->
+<div class="modal" id="saldoModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <i class="fas fa-edit"></i>
+      <h3>Edit Saldo Awal</h3>
+    </div>
+    
+    <form class="modal-form" id="saldoForm" onsubmit="return false;">
+      <div class="form-group">
+        <label for="saldoAwalInput"><i class="fas fa-money-bill-wave"></i> Jumlah Saldo Awal (Rp)</label>
+        <input type="number" id="saldoAwalInput" placeholder="0" min="0" step="1000" required>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="modal-btn cancel" id="cancelSaldoBtn">
+          <i class="fas fa-times"></i> Batal
+        </button>
+        <button type="submit" class="modal-btn save" id="saveSaldoBtn">
+          <i class="fas fa-save"></i> Simpan Saldo
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2023 UMKM Kas Kecil - Sistem Manajemen Keuangan Sederhana</p>
+</footer>
 
 <script>
 // ========== VALIDASI LOGIN ==========
@@ -34,10 +922,360 @@ document.addEventListener("DOMContentLoaded", function() {
     welcomeText.innerHTML = `<i class="fas fa-chart-bar"></i> Dashboard Keuangan - ${username}`;
   }
   // ========== END VALIDASI ==========
+
+  // Mobile menu toggle
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
   
-  // ... SISA KODE DASHBOARD ANDA YANG ASLI ...
-  // (Mobile menu, render data, dll)
+  mobileMenuBtn.addEventListener('click', function() {
+    mobileMenu.classList.toggle('show');
+  });
+
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', function(event) {
+    if (!mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+      mobileMenu.classList.remove('show');
+    }
+  });
+
+  // Tab switching
+  window.showTab = function(tabName) {
+    // Remove active class from all tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.remove('active');
+    });
+    
+    // Add active class to selected tab
+    document.querySelector(`.tab-btn[onclick="showTab('${tabName}')"]`).classList.add('active');
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+  };
+
+  // Load data from localStorage
+  let saldoAwal = JSON.parse(localStorage.getItem("saldoAwal")) || { jumlah: 0 };
+  let pemasukan = JSON.parse(localStorage.getItem("dataPemasukan")) || [];
+  let pengeluaran = JSON.parse(localStorage.getItem("dataPengeluaran")) || [];
+
+  // Format Rupiah function
+  function formatRupiah(angka) {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+    }).format(angka);
+  }
+
+  // Calculate total functions
+  function calculateTotals() {
+    const totalMasuk = pemasukan.reduce((sum, d) => sum + Number(d.jumlah || 0), 0);
+    const totalKeluar = pengeluaran.reduce((sum, d) => sum + Number(d.jumlah || 0), 0);
+    const saldoAkhir = saldoAwal.jumlah + totalMasuk - totalKeluar;
+    
+    return { totalMasuk, totalKeluar, saldoAkhir };
+  }
+
+  // Render dashboard
+  function render() {
+    const { totalMasuk, totalKeluar, saldoAkhir } = calculateTotals();
+    
+    // Update card values
+    document.getElementById("saldoAwal").innerText = formatRupiah(saldoAwal.jumlah);
+    document.getElementById("masuk").innerText = formatRupiah(totalMasuk);
+    document.getElementById("keluar").innerText = formatRupiah(totalKeluar);
+    document.getElementById("saldo").innerText = formatRupiah(saldoAkhir);
+
+    // Combine and sort transactions
+    let semua = [];
+    
+    pemasukan.forEach((d, i) => {
+      semua.push({
+        tanggal: d.tanggal,
+        keterangan: d.keterangan,
+        jenis: "Pemasukan",
+        jumlah: d.jumlah,
+        hargaSatuan: d.hargaSatuan || 0,
+        jumlahBarang: d.jumlahBarang || 1,
+        catatan: d.catatan || '',
+        tipe: "in",
+        index: i
+      });
+    });
+
+    pengeluaran.forEach((d, i) => {
+      semua.push({
+        tanggal: d.tanggal,
+        keterangan: d.keterangan,
+        jenis: "Pengeluaran",
+        jumlah: d.jumlah,
+        hargaSatuan: d.hargaSatuan || 0,
+        jumlahBarang: d.jumlahBarang || 1,
+        catatan: d.catatan || '',
+        tipe: "out",
+        index: i
+      });
+    });
+
+    // Sort by date (newest first)
+    semua.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+
+    // === RENDER TAB SEMUA TRANSAKSI ===
+    let tbodyAll = document.getElementById("dataRiwayatAll");
+    let noDataAll = document.getElementById("noDataMessageAll");
+    
+    tbodyAll.innerHTML = "";
+    
+    if (semua.length === 0) {
+      noDataAll.style.display = 'block';
+      tbodyAll.innerHTML = `
+        <tr>
+          <td colspan="5" style="text-align: center; padding: 2rem; color: var(--gray);">
+            <i class="fas fa-receipt" style="font-size: 2rem; margin-bottom: 1rem; display: block; color: var(--gray-light);"></i>
+            Belum ada transaksi. Tambahkan pemasukan atau pengeluaran pertama Anda.
+          </td>
+        </tr>
+      `;
+    } else {
+      noDataAll.style.display = 'none';
+      
+      let limitedTransactions = semua.slice(0, 10);
+      
+      limitedTransactions.forEach(t => {
+        let row = document.createElement("tr");
+        
+        // Format date
+        let dateObj = new Date(t.tanggal);
+        let formattedDate = dateObj.toLocaleDateString('id-ID', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        });
+        
+        row.innerHTML = `
+          <td>${formattedDate}</td>
+          <td>${t.keterangan}</td>
+          <td><span class="badge ${t.jenis === 'Pemasukan' ? 'income-badge' : 'expense-badge'}">${t.jenis}</span></td>
+          <td class="amount ${t.jenis === 'Pemasukan' ? 'income-amount' : 'expense-amount'}">${formatRupiah(t.jumlah)}</td>
+          <td>
+            <button class="action-btn delete-btn" onclick="hapusData('${t.tipe}', ${t.index})">
+              <i class="fas fa-trash"></i> Hapus
+            </button>
+          </td>
+        `;
+        tbodyAll.appendChild(row);
+      });
+    }
+
+    // === RENDER TAB PEMASUKAN ===
+    let tbodyPemasukan = document.getElementById("dataRiwayatPemasukan");
+    let noDataPemasukan = document.getElementById("noDataMessagePemasukan");
+    
+    tbodyPemasukan.innerHTML = "";
+    
+    let pemasukanFiltered = pemasukan.slice().sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+    
+    if (pemasukanFiltered.length === 0) {
+      noDataPemasukan.style.display = 'block';
+    } else {
+      noDataPemasukan.style.display = 'none';
+      
+      pemasukanFiltered.forEach((t, i) => {
+        let row = document.createElement("tr");
+        
+        // Format date
+        let dateObj = new Date(t.tanggal);
+        let formattedDate = dateObj.toLocaleDateString('id-ID', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        });
+        
+        // Detail barang
+        let detailBarang = '';
+        if (t.hargaSatuan && t.jumlahBarang) {
+          detailBarang = `
+            <div class="item-details">
+              <span>${t.jumlahBarang} unit</span>
+              <span>@ ${formatRupiah(t.hargaSatuan)}</span>
+            </div>
+          `;
+        }
+        
+        row.innerHTML = `
+          <td>${formattedDate}</td>
+          <td>
+            <strong>${t.keterangan}</strong>
+            ${t.catatan ? `<div style="font-size: 0.85rem; color: var(--gray); margin-top: 4px;">${t.catatan}</div>` : ''}
+          </td>
+          <td>${detailBarang}</td>
+          <td class="amount income-amount">
+            <strong>${formatRupiah(t.jumlah)}</strong>
+          </td>
+          <td>
+            <button class="action-btn delete-btn" onclick="hapusData('in', ${i})">
+              <i class="fas fa-trash"></i> Hapus
+            </button>
+          </td>
+        `;
+        tbodyPemasukan.appendChild(row);
+      });
+    }
+
+    // === RENDER TAB PENGELUARAN ===
+    let tbodyPengeluaran = document.getElementById("dataRiwayatPengeluaran");
+    let noDataPengeluaran = document.getElementById("noDataMessagePengeluaran");
+    
+    tbodyPengeluaran.innerHTML = "";
+    
+    let pengeluaranFiltered = pengeluaran.slice().sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+    
+    if (pengeluaranFiltered.length === 0) {
+      noDataPengeluaran.style.display = 'block';
+    } else {
+      noDataPengeluaran.style.display = 'none';
+      
+      pengeluaranFiltered.forEach((t, i) => {
+        let row = document.createElement("tr");
+        
+        // Format date
+        let dateObj = new Date(t.tanggal);
+        let formattedDate = dateObj.toLocaleDateString('id-ID', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        });
+        
+        // Detail barang
+        let detailBarang = '';
+        if (t.hargaSatuan && t.jumlahBarang) {
+          detailBarang = `
+            <div class="item-details">
+              <span>${t.jumlahBarang} unit</span>
+              <span>@ ${formatRupiah(t.hargaSatuan)}</span>
+            </div>
+          `;
+        }
+        
+        row.innerHTML = `
+          <td>${formattedDate}</td>
+          <td>
+            <strong>${t.keterangan}</strong>
+            ${t.catatan ? `<div style="font-size: 0.85rem; color: var(--gray); margin-top: 4px;">${t.catatan}</div>` : ''}
+          </td>
+          <td>${detailBarang}</td>
+          <td class="amount expense-amount">
+            <strong>${formatRupiah(t.jumlah)}</strong>
+          </td>
+          <td>
+            <button class="action-btn delete-btn" onclick="hapusData('out', ${i})">
+              <i class="fas fa-trash"></i> Hapus
+            </button>
+          </td>
+        `;
+        tbodyPengeluaran.appendChild(row);
+      });
+    }
+  }
+
+  // Delete transaction function
+  window.hapusData = function(tipe, index) {
+    if (confirm("Apakah Anda yakin ingin menghapus transaksi ini?")) {
+      if (tipe === "in") {
+        pemasukan.splice(index, 1);
+        localStorage.setItem("dataPemasukan", JSON.stringify(pemasukan));
+      } else {
+        pengeluaran.splice(index, 1);
+        localStorage.setItem("dataPengeluaran", JSON.stringify(pengeluaran));
+      }
+      render();
+      
+      // Show success notification
+      alert("Transaksi berhasil dihapus!");
+    }
+  }
+
+  // ========== MODAL SALDO AWAL ==========
+  const saldoModal = document.getElementById('saldoModal');
+  const editSaldoBtn = document.getElementById('editSaldoBtn');
+  const cancelSaldoBtn = document.getElementById('cancelSaldoBtn');
+  const saveSaldoBtn = document.getElementById('saveSaldoBtn');
+  const saldoAwalInput = document.getElementById('saldoAwalInput');
+  const saldoForm = document.getElementById('saldoForm');
+
+  // Open modal
+  editSaldoBtn.addEventListener('click', function() {
+    saldoAwalInput.value = saldoAwal.jumlah;
+    saldoModal.style.display = 'flex';
+    saldoAwalInput.focus();
+  });
+
+  // Close modal
+  function closeModal() {
+    saldoModal.style.display = 'none';
+  }
+
+  // Cancel button
+  cancelSaldoBtn.addEventListener('click', closeModal);
+
+  // Close modal when clicking outside
+  saldoModal.addEventListener('click', function(e) {
+    if (e.target === saldoModal) {
+      closeModal();
+    }
+  });
+
+  // Save saldo awal
+  saldoForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const newSaldo = Number(saldoAwalInput.value);
+    
+    if (isNaN(newSaldo) || newSaldo < 0) {
+      alert('Masukkan jumlah saldo awal yang valid!');
+      return;
+    }
+    
+    saldoAwal = { jumlah: newSaldo };
+    localStorage.setItem("saldoAwal", JSON.stringify(saldoAwal));
+    
+    // Show success message
+    alert(`Saldo awal berhasil diubah menjadi ${formatRupiah(newSaldo)}`);
+    
+    closeModal();
+    render();
+  });
+
+  // ========== FUNGSI LOGOUT ==========
+  document.getElementById('logoutBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    if (confirm('Apakah Anda yakin ingin logout?')) {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('savedUsername');
+      alert('Anda telah logout');
+      window.location.href = 'login.html';
+    }
+  });
+
+  document.getElementById('logoutBtnMobile').addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    if (confirm('Apakah Anda yakin ingin logout?')) {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('savedUsername');
+      alert('Anda telah logout');
+      window.location.href = 'login.html';
+    }
+  });
+
+  // Initial render
+  render();
+  
+  // Auto refresh setiap 5 detik
+  setInterval(render, 5000);
 });
 </script>
+
 </body>
 </html>
