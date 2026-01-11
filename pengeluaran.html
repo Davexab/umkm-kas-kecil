@@ -509,15 +509,6 @@ function formatRupiah(angka) {
 function setCategory(category) {
   document.getElementById('ket').value = category;
   
-  // Remove active class from all buttons
-  document.querySelectorAll('.category-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  
-  // Add active class to clicked button
-  event.target.classList.add('active');
-}
-
 function simpan() {
   // Cek login status lagi untuk keamanan
   const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -537,22 +528,39 @@ function simpan() {
     return;
   }
   
-  let data = JSON.parse(localStorage.getItem("pengeluaran")) || [];
-  data.push({
+  // AMBIL DAN SIMPAN DENGAN KEY YANG BENAR
+  let data = JSON.parse(localStorage.getItem("dataPengeluaran")) || [];
+  let newData = {
     tanggal: tgl,
     keterangan: ket,
     jumlah: Number(jml)
-  });
+  };
   
-  localStorage.setItem("pengeluaran", JSON.stringify(data));
+  data.push(newData);
+  
+  // SIMPAN DI KEDUA KEY
+  localStorage.setItem("dataPengeluaran", JSON.stringify(data));
+  localStorage.setItem("pengeluaran", JSON.stringify(data)); // Backup
+  
+  console.log("✅ Pengeluaran disimpan:", newData);
   
   // Show success message
   alert(`Pengeluaran sebesar ${formatRupiah(jml)} berhasil dicatat!`);
   
   // Redirect to dashboard
   location.href = "dashboard.html";
+}  // Remove active class from all buttons
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Add active class to clicked button
+  event.target.classList.add('active');
 }
+
+
 </script>
 
 </body>
 </html>
+
