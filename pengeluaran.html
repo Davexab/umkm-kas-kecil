@@ -509,6 +509,15 @@ function formatRupiah(angka) {
 function setCategory(category) {
   document.getElementById('ket').value = category;
   
+  // Remove active class from all buttons
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Add active class to clicked button
+  event.target.classList.add('active');
+}
+
 function simpan() {
   // Cek login status lagi untuk keamanan
   const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -549,18 +558,5 @@ function simpan() {
   
   // Redirect to dashboard
   location.href = "dashboard.html";
-}  // Remove active class from all buttons
-  document.querySelectorAll('.category-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  
-  // Add active class to clicked button
-  event.target.classList.add('active');
 }
-
-
 </script>
-
-</body>
-</html>
-
