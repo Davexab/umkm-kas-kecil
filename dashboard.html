@@ -896,6 +896,8 @@ footer {
 
 <script>
 // ========== VALIDASI LOGIN ==========
+<script>
+// ========== VALIDASI LOGIN ==========
 document.addEventListener("DOMContentLoaded", function() {
   const isLoggedIn = localStorage.getItem('isLoggedIn');
   
@@ -906,6 +908,9 @@ document.addEventListener("DOMContentLoaded", function() {
   }
   // ========== END VALIDASI ==========
 
+  // Deklarasi variabel
+  let saldoAwal, pemasukan, pengeluaran;
+  
   // Mobile menu toggle
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');
   const mobileMenu = document.getElementById('mobileMenu');
@@ -936,10 +941,20 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById(`tab-${tabName}`).classList.add('active');
   };
 
+  // ========== FUNGSI DATA ==========
   // Load data from localStorage
-  let saldoAwal = JSON.parse(localStorage.getItem("saldoAwal")) || { jumlah: 0 };
-  let pemasukan = JSON.parse(localStorage.getItem("pemasukan")) || [];
-  let pengeluaran = JSON.parse(localStorage.getItem("pengeluaran")) || [];
+  function loadData() {
+    saldoAwal = JSON.parse(localStorage.getItem("saldoAwal")) || { jumlah: 0 };
+    pemasukan = JSON.parse(localStorage.getItem("dataPemasukan")) || [];
+    pengeluaran = JSON.parse(localStorage.getItem("dataPengeluaran")) || [];
+    
+    // Debug log
+    console.log("Data dimuat:", {
+      saldoAwal: saldoAwal.jumlah,
+      pemasukan: pemasukan.length + " items",
+      pengeluaran: pengeluaran.length + " items"
+    });
+  }
 
   // Format Rupiah function
   function formatRupiah(angka) {
@@ -952,8 +967,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Calculate total functions
   function calculateTotals() {
-    const totalMasuk = pemasukan.reduce((sum, d) => sum + Number(d.jumlah), 0);
-    const totalKeluar = pengeluaran.reduce((sum, d) => sum + Number(d.jumlah), 0);
+    const totalMasuk = pemasukan.reduce((sum, d) => sum + Number(d.jumlah || 0), 0);
+    const totalKeluar = pengeluaran.reduce((sum, d) => sum + Number(d.jumlah || 0), 0);
     const saldoAkhir = saldoAwal.jumlah + totalMasuk - totalKeluar;
     
     return { totalMasuk, totalKeluar, saldoAkhir };
@@ -961,6 +976,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Render dashboard
   function render() {
+    // Selalu load data terbaru
+    loadData();
+    
     const { totalMasuk, totalKeluar, saldoAkhir } = calculateTotals();
     
     // Update card values
@@ -1164,12 +1182,14 @@ document.addEventListener("DOMContentLoaded", function() {
   // Delete transaction function
   window.hapusData = function(tipe, index) {
     if (confirm("Apakah Anda yakin ingin menghapus transaksi ini?")) {
+      loadData(); // Pastikan data terbaru
+      
       if (tipe === "in") {
         pemasukan.splice(index, 1);
-        localStorage.setItem("pemasukan", JSON.stringify(pemasukan));
+        localStorage.setItem("dataPemasukan", JSON.stringify(pemasukan));
       } else {
         pengeluaran.splice(index, 1);
-        localStorage.setItem("pengeluaran", JSON.stringify(pengeluaran));
+        localStorage.setItem("dataPengeluaran", JSON.stringify(pengeluaran));
       }
       render();
       
@@ -1188,6 +1208,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Open modal
   editSaldoBtn.addEventListener('click', function() {
+    loadData(); // Ambil data terbaru
     saldoAwalInput.value = saldoAwal.jumlah;
     saldoModal.style.display = 'flex';
     saldoAwalInput.focus();
@@ -1229,53 +1250,10 @@ document.addEventListener("DOMContentLoaded", function() {
     render();
   });
 
-  // ========== FUNGSI LOGOUT ==========
-  function logout() {
-    if (confirm('Apakah Anda yakin ingin logout?')) {
-      // Clear login data
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('savedUsername');
-      
-      // Redirect to logout page
-      window.location.href = 'logout.html';
-    }
-  }
-
-  document.getElementById('logoutLink').addEventListener('click', function(e) {
-    e.preventDefault();
-    logout();
-  });
-
-  document.getElementById('logoutLinkMobile').addEventListener('click', function(e) {
-    e.preventDefault();
-    logout();
-  });
-
-  // Auto logout after 30 minutes of inactivity
-  let inactivityTimer;
-  function resetInactivityTimer() {
-    clearTimeout(inactivityTimer);
-    inactivityTimer = setTimeout(function() {
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('savedUsername');
-      alert('Sesi telah berakhir karena tidak aktif. Silakan login kembali.');
-      window.location.href = 'login.html';
-    }, 1800000); // 30 minutes
-  }
-
-  // Reset timer on user activity
-  ['mousemove', 'keypress', 'click', 'scroll'].forEach(event => {
-    document.addEventListener(event, resetInactivityTimer);
-  });
-
-  resetInactivityTimer();
-  // ========== END FUNGSI LOGOUT ==========
-
   // Initial render
   render();
+  
+  // Auto refresh setiap 2 detik (untuk testing)
+  setInterval(render, 2000);
 });
 </script>
-
-</body>
-</html>
-
