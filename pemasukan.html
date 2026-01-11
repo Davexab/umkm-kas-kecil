@@ -633,17 +633,24 @@ function simpan() {
     return;
   }
   
-  let data = JSON.parse(localStorage.getItem("pemasukan")) || [];
-  data.push({
+  // AMBIL DAN SIMPAN DENGAN KEY YANG BENAR
+  let data = JSON.parse(localStorage.getItem("dataPemasukan")) || [];
+  let newData = {
     tanggal: tgl,
     keterangan: ket,
     hargaSatuan: hargaSatuan,
     jumlahBarang: jumlahBarang,
     jumlah: total,
     catatan: catatan || ''
-  });
+  };
   
-  localStorage.setItem("pemasukan", JSON.stringify(data));
+  data.push(newData);
+  
+  // SIMPAN DI KEDUA KEY
+  localStorage.setItem("dataPemasukan", JSON.stringify(data));
+  localStorage.setItem("pemasukan", JSON.stringify(data)); // Backup
+  
+  console.log("✅ Pemasukan disimpan:", newData);
   
   // Show success message
   alert(`Pemasukan sebesar ${formatRupiah(total)} berhasil ditambahkan!\n\nDetail:\n- Barang: ${ket}\n- Harga: ${formatRupiah(hargaSatuan)}/unit\n- Jumlah: ${jumlahBarang} unit`);
@@ -660,3 +667,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </body>
 </html>
+
