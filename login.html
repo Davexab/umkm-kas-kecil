@@ -272,7 +272,6 @@
                         <i class="fas fa-lock"></i>
                         <input type="password" id="password" placeholder="Masukkan password" required>
                     </div>
-                    <!-- HINT DIHAPUS DARI SINI -->
                 </div>
 
                 <div class="options">
@@ -316,21 +315,21 @@
             
             // Validasi kredensial
             if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-                // Simpan informasi login
+                // Simpan informasi login di localStorage
                 const rememberMe = document.getElementById('remember').checked;
+                
                 if (rememberMe) {
                     localStorage.setItem('rememberedUser', username);
                 } else {
                     localStorage.removeItem('rememberedUser');
                 }
                 
-                // Simpan status login
-                sessionStorage.setItem('isLoggedIn', 'true');
-                sessionStorage.setItem('username', username);
+                // Simpan status login di localStorage
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', username);
                 
                 // Tampilkan pesan sukses
                 const loginButton = document.querySelector('.login-button');
-                const originalText = loginButton.innerHTML;
                 loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengarahkan...';
                 loginButton.disabled = true;
                 
@@ -373,12 +372,18 @@
             
             // Auto-focus ke username field
             document.getElementById('username').focus();
+            
+            // Cek jika sudah login, redirect ke dashboard
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                window.location.href = 'dashboard.html';
+            }
         });
 
-        // Fitur lupa password (sederhana)
+        // Fitur lupa password
         document.querySelector('.forgot-password').addEventListener('click', function(e) {
             e.preventDefault();
-            alert('Untuk akses demo, gunakan kredensial yang diberikan oleh administrator.');
+            alert('Untuk akses sistem ini:\n\nUsername: admin\nPassword: admin24\n\nHubungi administrator untuk reset password.');
         });
     </script>
 </body>
