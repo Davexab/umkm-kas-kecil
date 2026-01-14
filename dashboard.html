@@ -5,6 +5,8 @@
 <title>Dashboard - UMKM Kas Kecil</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Tambahkan check-login.js -->
+<script src="check-login.js"></script>
 <style>
 * {
   margin: 0;
@@ -552,6 +554,36 @@ tbody tr:hover {
   background: #d1d5db;
 }
 
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+}
+
+.user-info span {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.logout-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 15px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
 footer {
   text-align: center;
   padding: 1.5rem;
@@ -722,16 +754,19 @@ footer {
       <a href="dashboard.html" class="active"><i class="fas fa-home"></i> <span class="nav-text">Dashboard</span></a>
       <a href="pemasukan.html"><i class="fas fa-plus-circle"></i> <span class="nav-text">Pemasukan</span></a>
       <a href="pengeluaran.html"><i class="fas fa-minus-circle"></i> <span class="nav-text">Pengeluaran</span></a>
-      <a href="#" id="logoutBtn" style="background: rgba(255, 255, 255, 0.15);">
-        <i class="fas fa-sign-out-alt"></i> <span class="nav-text">Logout</span>
-      </a>
+      <div class="user-info">
+        <span id="usernameDisplay">User</span>
+        <button class="logout-btn" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i> <span class="nav-text">Logout</span>
+        </button>
+      </div>
     </nav>
     
     <div class="mobile-menu" id="mobileMenu">
       <a href="dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a>
       <a href="pemasukan.html"><i class="fas fa-plus-circle"></i> Pemasukan</a>
       <a href="pengeluaran.html"><i class="fas fa-minus-circle"></i> Pengeluaran</a>
-      <a href="#" id="logoutBtnMobile"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      <a href="#" class="logout-btn" id="logoutBtnMobile"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
   </div>
 </header>
@@ -739,7 +774,7 @@ footer {
 <div class="container">
   <div class="welcome-card">
     <div class="welcome-content">
-      <h2><i class="fas fa-chart-bar"></i> Dashboard Keuangan</h2>
+      <h2><i class="fas fa-chart-bar"></i> <span id="dashboardTitle">Dashboard Keuangan</span></h2>
       <p>Pantau semua pemasukan dan pengeluaran UMKM Anda secara real-time. Dashboard ini menampilkan ringkasan keuangan dan riwayat transaksi terbaru.</p>
     </div>
     <button class="edit-saldo-btn" id="editSaldoBtn">
@@ -899,29 +934,16 @@ footer {
 </footer>
 
 <script>
-// ========== VALIDASI LOGIN ==========
+// ========== DASHBOARD FUNCTIONS ==========
 document.addEventListener("DOMContentLoaded", function() {
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
-  const username = localStorage.getItem('savedUsername');
-  
-  console.log("=== DASHBOARD LOGIN CHECK ===");
-  console.log("isLoggedIn:", isLoggedIn);
-  console.log("username:", username);
-  
-  if (isLoggedIn !== 'true' || !username) {
-    alert('Anda harus login terlebih dahulu!');
-    window.location.href = 'login.html';
-    return;
-  }
-  
-  console.log("User berhasil login sebagai:", username);
+  // Validasi login sudah dilakukan oleh check-login.js
   
   // Tampilkan username di dashboard
-  const welcomeText = document.querySelector('.welcome-content h2');
-  if (welcomeText) {
-    welcomeText.innerHTML = `<i class="fas fa-chart-bar"></i> Dashboard Keuangan - ${username}`;
+  const username = localStorage.getItem('username');
+  if (username) {
+    document.getElementById('usernameDisplay').textContent = username;
+    document.getElementById('dashboardTitle').innerHTML = `Dashboard Keuangan - <span style="color: var(--primary);">${username}</span>`;
   }
-  // ========== END VALIDASI ==========
 
   // Mobile menu toggle
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -1244,29 +1266,6 @@ document.addEventListener("DOMContentLoaded", function() {
     
     closeModal();
     render();
-  });
-
-  // ========== FUNGSI LOGOUT ==========
-  document.getElementById('logoutBtn').addEventListener('click', function(e) {
-    e.preventDefault();
-    
-    if (confirm('Apakah Anda yakin ingin logout?')) {
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('savedUsername');
-      alert('Anda telah logout');
-      window.location.href = 'login.html';
-    }
-  });
-
-  document.getElementById('logoutBtnMobile').addEventListener('click', function(e) {
-    e.preventDefault();
-    
-    if (confirm('Apakah Anda yakin ingin logout?')) {
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('savedUsername');
-      alert('Anda telah logout');
-      window.location.href = 'login.html';
-    }
   });
 
   // Initial render
