@@ -215,16 +215,6 @@
             display: block;
         }
 
-        .credentials-hint {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-            background: #f8f9fa;
-            padding: 8px;
-            border-radius: 5px;
-            border-left: 3px solid #4361ee;
-        }
-
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -282,10 +272,7 @@
                         <i class="fas fa-lock"></i>
                         <input type="password" id="password" placeholder="Masukkan password" required>
                     </div>
-                    <div class="credentials-hint">
-                        <i class="fas fa-info-circle"></i> 
-                        Gunakan username: <strong>admin</strong> dan password: <strong>admin24</strong>
-                    </div>
+                    <!-- HINT DIHAPUS DARI SINI -->
                 </div>
 
                 <div class="options">
@@ -354,7 +341,7 @@
                 
             } else {
                 // Tampilkan pesan error
-                errorText.textContent = 'Username atau password salah! Gunakan username: admin, password: admin24';
+                errorText.textContent = 'Username atau password salah!';
                 errorMessage.classList.add('show');
                 
                 // Animasi shake pada form
@@ -391,7 +378,7 @@
         // Fitur lupa password (sederhana)
         document.querySelector('.forgot-password').addEventListener('click', function(e) {
             e.preventDefault();
-            alert('Fitur lupa password belum tersedia. Silakan gunakan kredensial default:\n\nUsername: admin\nPassword: admin24');
+            alert('Untuk akses demo, gunakan kredensial yang diberikan oleh administrator.');
         });
     </script>
 </body>
