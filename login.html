@@ -1,240 +1,640 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Aplikasi Kas Kecil UMKM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+<meta charset="UTF-8">
+<title>Login - UMKM Kas Kecil</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --light: #f8fafc;
+  --dark: #1e293b;
+  --gray: #64748b;
+  --gray-light: #e2e8f0;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius: 16px;
+  --radius-sm: 8px;
+}
 
-        .login-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-            overflow: hidden;
-        }
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--dark);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
 
-        .login-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
+.login-container {
+  display: flex;
+  max-width: 1000px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: white;
+  animation: fadeIn 0.8s ease-out;
+}
 
-        .login-header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-        .login-header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
+.login-left {
+  flex: 1;
+  background: linear-gradient(to bottom right, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
 
-        .login-form {
-            padding: 30px;
-        }
+.login-left::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+.login-left::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -10%;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-        }
+.login-left h1 {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
 
-        .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
+.login-left p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
 
-        .form-group input:focus {
-            border-color: #667eea;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
+.features {
+  list-style: none;
+  margin-top: 2rem;
+  position: relative;
+  z-index: 1;
+}
 
-        .login-button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-top: 10px;
-        }
+.features li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.2rem;
+  font-size: 0.95rem;
+  position: relative;
+  z-index: 1;
+}
 
-        .login-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 7px 14px rgba(102, 126, 234, 0.2);
-        }
+.features i {
+  background: rgba(255, 255, 255, 0.2);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
 
-        .login-button:active {
-            transform: translateY(0);
-        }
+.login-right {
+  flex: 1;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-        .error-message {
-            background: #fee;
-            color: #c33;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: none;
-            border-left: 4px solid #c33;
-        }
+.login-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
 
-        .show-password {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
-            color: #666;
-            cursor: pointer;
-        }
+.login-header h2 {
+  color: var(--primary);
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
 
-        .show-password input[type="checkbox"] {
-            width: auto;
-            transform: scale(1.2);
-        }
+.login-header p {
+  color: var(--gray);
+}
 
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-            font-size: 14px;
-            border-top: 1px solid #eee;
-        }
+.login-form {
+  width: 100%;
+}
 
-        @media (max-width: 480px) {
-            .login-container {
-                border-radius: 15px;
-            }
-            
-            .login-header {
-                padding: 25px;
-            }
-            
-            .login-form {
-                padding: 25px;
-            }
-        }
-    </style>
+.form-group {
+  margin-bottom: 1.8rem;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon i {
+  position: absolute;
+  left: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray);
+  z-index: 1;
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding: 1rem 1.2rem 1rem 3.2rem;
+  border: 2px solid var(--gray-light);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.input-with-icon input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.password-toggle {
+  position: absolute;
+  right: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--gray);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--gray);
+}
+
+.forgot-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.forgot-link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(to right, var(--primary), var(--primary-dark));
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.login-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: var(--danger);
+  background: #fee2e2;
+  padding: 0.8rem;
+  border-radius: var(--radius-sm);
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  animation: shake 0.5s ease;
+}
+
+.success-message {
+  color: var(--success);
+  background: #d1fae5;
+  padding: 0.8rem;
+  border-radius: var(--radius-sm);
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--gray);
+  font-size: 0.9rem;
+}
+
+.login-footer a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+
+.loading {
+  display: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    max-width: 450px;
+  }
+  
+  .login-left, .login-right {
+    padding: 2rem;
+  }
+  
+  .login-left {
+    order: 2;
+  }
+  
+  .login-right {
+    order: 1;
+  }
+  
+  .remember-forgot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-left, .login-right {
+    padding: 1.5rem;
+  }
+  
+  .login-left h1 {
+    font-size: 1.8rem;
+  }
+  
+  .login-header h2 {
+    font-size: 1.5rem;
+  }
+}
+</style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-header">
-            <h1>UMKM Kas Kecil</h1>
-            <p>Login untuk mengakses dashboard</p>
-        </div>
-        
-        <div id="errorMessage" class="error-message">
-            Username atau password salah!
-        </div>
-        
-        <form id="loginForm" class="login-form">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Masukkan username" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Masukkan password" required>
-            </div>
-            
-            <div class="show-password">
-                <input type="checkbox" id="showPassword">
-                <label for="showPassword">Tampilkan password</label>
-            </div>
-            
-            <button type="submit" class="login-button">Login</button>
-        </form>
-        
-        <div class="footer">
-            © 2024 Aplikasi Kas Kecil UMKM
-        </div>
+
+<div class="login-container">
+  <div class="login-left">
+    <h1><i class="fas fa-chart-line"></i> UMKM Kas Kecil</h1>
+    <p>Sistem manajemen keuangan sederhana untuk membantu UMKM mengelola pemasukan dan pengeluaran dengan lebih efisien.</p>
+    
+    <ul class="features">
+      <li><i class="fas fa-check-circle"></i> Pantau arus kas real-time</li>
+      <li><i class="fas fa-check-circle"></i> Catat pemasukan & pengeluaran</li>
+      <li><i class="fas fa-check-circle"></i> Analisis keuangan sederhana</li>
+      <li><i class="fas fa-check-circle"></i> Akses dari perangkat apapun</li>
+    </ul>
+  </div>
+  
+  <div class="login-right">
+    <div class="login-header">
+      <h2>Masuk ke Akun Anda</h2>
+      <p>Silakan masuk untuk mengelola keuangan UMKM Anda</p>
     </div>
+    
+    <form class="login-form" id="loginForm">
+      <div class="form-group">
+        <label for="user"><i class="fas fa-user"></i> Username</label>
+        <div class="input-with-icon">
+          <i class="fas fa-user"></i>
+          <input type="text" id="user" placeholder="Masukkan username" autocomplete="username" required>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="pass"><i class="fas fa-lock"></i> Password</label>
+        <div class="input-with-icon">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="pass" placeholder="Masukkan password" autocomplete="current-password" required>
+          <button type="button" class="password-toggle" id="togglePassword">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="remember-forgot">
+        <div class="remember">
+          <input type="checkbox" id="remember">
+          <label for="remember">Ingat saya</label>
+        </div>
+        <a href="#" class="forgot-link" id="forgotPassword">Lupa password?</a>
+      </div>
+      
+      <div class="error-message" id="errorMessage">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorText"></span>
+      </div>
+      
+      <div class="success-message" id="successMessage">
+        <i class="fas fa-check-circle"></i>
+        <span id="successText"></span>
+      </div>
+      
+      <button type="submit" class="login-btn" id="loginBtn">
+        <span id="btnText">Masuk ke Dashboard</span>
+        <div class="loading" id="loadingSpinner"></div>
+      </button>
+    </form>
+    
+    <div class="login-footer">
+      <p>&copy; 2024 UMKM Kas Kecil. Hak Cipta Dilindungi.</p>
+    </div>
+  </div>
+</div>
 
-    <script>
-        document.getElementById('showPassword').addEventListener('change', function(e) {
-            const passwordInput = document.getElementById('password');
-            passwordInput.type = e.target.checked ? 'text' : 'password';
-        });
+<script>
+// Toggle password visibility
+document.getElementById('togglePassword').addEventListener('click', function() {
+  const passwordInput = document.getElementById('pass');
+  const icon = this.querySelector('i');
+  
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+  } else {
+    passwordInput.type = 'password';
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
+});
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('errorMessage');
-            
-            // Reset error message
-            errorMessage.style.display = 'none';
-            
-            // Simple validation - in real app, this would be server-side validation
-            if (username === 'admin' && password === 'admin123') {
-                // Simpan status login di localStorage
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('username', username);
-                
-                // Redirect ke dashboard
-                window.location.href = 'index.html';
-            } else {
-                errorMessage.textContent = 'Username atau password salah!';
-                errorMessage.style.display = 'block';
-                
-                // Shake animation for error
-                errorMessage.animate([
-                    { transform: 'translateX(0)' },
-                    { transform: 'translateX(-10px)' },
-                    { transform: 'translateX(10px)' },
-                    { transform: 'translateX(0)' }
-                ], {
-                    duration: 300,
-                    iterations: 2
-                });
-            }
-        });
+// Check if user is already logged in
+window.addEventListener('load', function() {
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  const rememberMe = localStorage.getItem('rememberMe') === 'true';
+  
+  if (isLoggedIn === 'true' && rememberMe) {
+    // Auto redirect to dashboard if already logged in and remember me is checked
+    window.location.href = 'index.html';
+  } else if (isLoggedIn === 'true') {
+    // Clear login status if remember me is not checked
+    localStorage.removeItem('isLoggedIn');
+  }
+  
+  // Fill saved username if remember me was checked
+  if (rememberMe) {
+    const savedUsername = localStorage.getItem('savedUsername');
+    if (savedUsername) {
+      document.getElementById('user').value = savedUsername;
+      document.getElementById('remember').checked = true;
+    }
+  }
+  
+  // Check for logout parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('logout') === 'true') {
+    showSuccessMessage('Anda telah berhasil logout.');
+    localStorage.removeItem('isLoggedIn');
+  }
+});
 
-        // Focus on username input when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('username').focus();
-            
-            // Check if user is already logged in
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (isLoggedIn === 'true') {
-                window.location.href = 'index.html';
-            }
-        });
-    </script>
+// Forgot password handler
+document.getElementById('forgotPassword').addEventListener('click', function(e) {
+  e.preventDefault();
+  const username = document.getElementById('user').value.trim();
+  
+  if (!username) {
+    showErrorMessage('Masukkan username terlebih dahulu.');
+    document.getElementById('user').focus();
+    return;
+  }
+  
+  showSuccessMessage(`Petunjuk reset password telah dikirim untuk username: ${username}. Default password: admin123`);
+});
+
+// Login function with validation
+function login(event) {
+  if (event) event.preventDefault();
+  
+  const user = document.getElementById('user').value.trim();
+  const pass = document.getElementById('pass').value;
+  const remember = document.getElementById('remember').checked;
+  const errorMessage = document.getElementById('errorMessage');
+  const errorText = document.getElementById('errorText');
+  const successMessage = document.getElementById('successMessage');
+  const loginBtn = document.getElementById('loginBtn');
+  const btnText = document.getElementById('btnText');
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  
+  // Hide messages
+  errorMessage.style.display = 'none';
+  successMessage.style.display = 'none';
+  
+  // Show loading state
+  btnText.style.display = 'none';
+  loadingSpinner.style.display = 'block';
+  loginBtn.disabled = true;
+  
+  // Simulate API call delay
+  setTimeout(() => {
+    // Credential validation
+    const validCredentials = {
+      'admin': 'admin123',
+      'user': 'user123',
+      'kasir': 'kasir123'
+    };
+    
+    if (!user || !pass) {
+      showErrorMessage('Username dan password harus diisi!');
+      resetButtonState();
+      return;
+    }
+    
+    if (validCredentials[user] && pass === validCredentials[user]) {
+      // Login successful
+      // Save login state
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('username', user);
+      
+      // Save username if remember me is checked
+      if (remember) {
+        localStorage.setItem('rememberMe', 'true');
+        localStorage.setItem('savedUsername', user);
+      } else {
+        localStorage.removeItem('rememberMe');
+        localStorage.removeItem('savedUsername');
+      }
+      
+      // Save user role
+      let role = 'admin';
+      if (user === 'user') role = 'user';
+      if (user === 'kasir') role = 'kasir';
+      localStorage.setItem('userRole', role);
+      
+      // Show success message
+      showSuccessMessage('Login berhasil! Mengarahkan ke dashboard...');
+      
+      // Redirect to dashboard after delay
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1000);
+    } else {
+      // Login failed
+      if (!validCredentials[user]) {
+        showErrorMessage('Username tidak ditemukan!');
+      } else {
+        showErrorMessage('Password salah!');
+      }
+      resetButtonState();
+    }
+  }, 800);
+}
+
+function showErrorMessage(message) {
+  const errorMessage = document.getElementById('errorMessage');
+  const errorText = document.getElementById('errorText');
+  const successMessage = document.getElementById('successMessage');
+  
+  successMessage.style.display = 'none';
+  errorText.textContent = message;
+  errorMessage.style.display = 'flex';
+}
+
+function showSuccessMessage(message) {
+  const errorMessage = document.getElementById('errorMessage');
+  const successMessage = document.getElementById('successMessage');
+  const successText = document.getElementById('successText');
+  
+  errorMessage.style.display = 'none';
+  successText.textContent = message;
+  successMessage.style.display = 'flex';
+}
+
+function resetButtonState() {
+  const btnText = document.getElementById('btnText');
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  const loginBtn = document.getElementById('loginBtn');
+  
+  btnText.style.display = 'inline';
+  loadingSpinner.style.display = 'none';
+  loginBtn.disabled = false;
+}
+
+// Form submission
+document.getElementById('loginForm').addEventListener('submit', login);
+
+// Allow form submission with Enter key
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Enter' && document.activeElement.tagName !== 'TEXTAREA') {
+    const loginBtn = document.getElementById('loginBtn');
+    if (!loginBtn.disabled) {
+      login();
+    }
+  }
+});
+
+// Auto focus on username field
+document.getElementById('user').focus();
+</script>
+
 </body>
 </html>
