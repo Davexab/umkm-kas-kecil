@@ -398,6 +398,9 @@ body {
     <div class="login-header">
       <h2>Masuk ke Akun Anda</h2>
       <p>Silakan masuk untuk mengelola keuangan UMKM Anda</p>
+      <p style="color: var(--warning); font-size: 0.9rem; margin-top: 10px;">
+        <i class="fas fa-info-circle"></i> Gunakan: <strong>admin</strong> / <strong>adminsecure24</strong>
+      </p>
     </div>
     
     <form class="login-form" id="loginForm">
@@ -405,7 +408,7 @@ body {
         <label for="user"><i class="fas fa-user"></i> Username</label>
         <div class="input-with-icon">
           <i class="fas fa-user"></i>
-          <input type="text" id="user" placeholder="Masukkan username" autocomplete="username" required>
+          <input type="text" id="user" placeholder="Masukkan username" autocomplete="username" value="admin">
         </div>
       </div>
       
@@ -413,7 +416,7 @@ body {
         <label for="pass"><i class="fas fa-lock"></i> Password</label>
         <div class="input-with-icon">
           <i class="fas fa-lock"></i>
-          <input type="password" id="pass" placeholder="Masukkan password" autocomplete="current-password" required>
+          <input type="password" id="pass" placeholder="Masukkan password" autocomplete="current-password" value="adminsecure24">
           <button type="button" class="password-toggle" id="togglePassword">
             <i class="fas fa-eye"></i>
           </button>
@@ -422,7 +425,7 @@ body {
       
       <div class="remember-forgot">
         <div class="remember">
-          <input type="checkbox" id="remember">
+          <input type="checkbox" id="remember" checked>
           <label for="remember">Ingat saya</label>
         </div>
         <a href="#" class="forgot-link" id="forgotPassword">Lupa password?</a>
@@ -472,9 +475,14 @@ window.addEventListener('load', function() {
   const isLoggedIn = localStorage.getItem('isLoggedIn');
   const rememberMe = localStorage.getItem('rememberMe') === 'true';
   
+  console.log('Login Status:', isLoggedIn);
+  console.log('Remember Me:', rememberMe);
+  
   if (isLoggedIn === 'true' && rememberMe) {
     // Auto redirect to dashboard if already logged in and remember me is checked
+    console.log('Auto-redirecting to dashboard...');
     window.location.href = 'index.html';
+    return;
   } else if (isLoggedIn === 'true') {
     // Clear login status if remember me is not checked
     localStorage.removeItem('isLoggedIn');
@@ -494,7 +502,12 @@ window.addEventListener('load', function() {
   if (urlParams.get('logout') === 'true') {
     showSuccessMessage('Anda telah berhasil logout.');
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userRole');
   }
+  
+  // Auto focus on password field (since username is prefilled)
+  document.getElementById('pass').focus();
 });
 
 // Forgot password handler
@@ -508,7 +521,7 @@ document.getElementById('forgotPassword').addEventListener('click', function(e) 
     return;
   }
   
-  showSuccessMessage(`Petunjuk reset password telah dikirim untuk username: ${username}. Default password: admin123`);
+  showSuccessMessage(`Reset password untuk username "${username}" telah dikirim. Password default: adminsecure24`);
 });
 
 // Login function with validation
@@ -536,12 +549,9 @@ function login(event) {
   
   // Simulate API call delay
   setTimeout(() => {
-    // Credential validation
-    const validCredentials = {
-      'admin': 'admin123',
-      'user': 'user123',
-      'kasir': 'kasir123'
-    };
+    // Single user credential
+    const validUsername = 'admin';
+    const validPassword = 'adminsecure24';
     
     if (!user || !pass) {
       showErrorMessage('Username dan password harus diisi!');
@@ -549,11 +559,14 @@ function login(event) {
       return;
     }
     
-    if (validCredentials[user] && pass === validCredentials[user]) {
+    if (user === validUsername && pass === validPassword) {
       // Login successful
+      console.log('Login berhasil untuk user:', user);
+      
       // Save login state
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('username', user);
+      localStorage.setItem('userRole', 'admin');
       
       // Save username if remember me is checked
       if (remember) {
@@ -564,22 +577,17 @@ function login(event) {
         localStorage.removeItem('savedUsername');
       }
       
-      // Save user role
-      let role = 'admin';
-      if (user === 'user') role = 'user';
-      if (user === 'kasir') role = 'kasir';
-      localStorage.setItem('userRole', role);
-      
       // Show success message
       showSuccessMessage('Login berhasil! Mengarahkan ke dashboard...');
       
-      // Redirect to dashboard after delay
+      // Force redirect with timestamp to prevent caching issues
       setTimeout(() => {
-        window.location.href = 'index.html';
+        window.location.href = 'index.html?login=success&t=' + new Date().getTime();
       }, 1000);
     } else {
       // Login failed
-      if (!validCredentials[user]) {
+      console.log('Login gagal:', { user: user, pass: pass });
+      if (user !== validUsername) {
         showErrorMessage('Username tidak ditemukan!');
       } else {
         showErrorMessage('Password salah!');
@@ -627,13 +635,16 @@ document.addEventListener('keydown', function(event) {
   if (event.key === 'Enter' && document.activeElement.tagName !== 'TEXTAREA') {
     const loginBtn = document.getElementById('loginBtn');
     if (!loginBtn.disabled) {
-      login();
+      login(event);
     }
   }
 });
 
-// Auto focus on username field
-document.getElementById('user').focus();
+// Test login function (for debugging)
+function testLogin() {
+  console.log('Testing login function...');
+  login();
+}
 </script>
 
 </body>
